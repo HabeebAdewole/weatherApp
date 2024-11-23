@@ -11,12 +11,16 @@ weatherForm.addEventListener('submit', async function(event) {
     
     const city = cityInput.value;
     const country = countryInput.value;
-    const apiUrl = `https://home.openweathermap.org/api_keys`;
+    const api_keys = 'a0c8fe0aee988711d650a640c43b7dda';
+    const geolocationUrl = 'http://api.openweathermap.org/geo/1.0/direct?q='+city+','+ country +'&appid='+api_keys;
+    const geoLocationResponse = await fetch(geolocationUrl);
+    const data = await geoLocationResponse.json();
+    const { lat: latitude, lon: longitude } = data[0];
+    const apiUrl = 'https://api.openweathermap.org/data/2.5/weather?'+ 'lat='+latitude+'&lon='+longitude+'&appid=' +api_keys;
 
     try {
         const response = await fetch(apiUrl);
         const weatherData = await response.json();
-
         if (weatherData.cod === 200) {
             const { name, main, weather } = weatherData;
             const { temp, humidity } = main;
